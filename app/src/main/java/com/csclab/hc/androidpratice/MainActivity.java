@@ -9,7 +9,23 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.lang.reflect.Array;
+import java.net.Socket;
+import java.util.Arrays;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+    Socket socket;
+    String serverIP;
+    int serverPort;
+
+    EditText addressText;
+    EditText portText;
+    Button btnConnect;
+
     /** Init Variable for Page 1 **/
     EditText inputNumTxt1;
     EditText inputNumTxt2;
@@ -32,15 +48,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         /** Func() for setup page 1 **/
-        jumpToMainLayout();
+        jumpToInitLayout();
+    }
+
+    public void jumpToInitLayout() {
+        setContentView(R.layout.activity_init);
+        addressText = (EditText) findViewById(R.id.editText);
+        portText = (EditText) findViewById(R.id.editText2);
+        btnConnect = (Button) findViewById(R.id.button);
+        if (btnConnect != null) {
+            btnConnect.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    serverIP = addressText.getText().toString();
+                    serverPort = Integer.parseInt(portText.getText().toString());
+                    jumpToMainLayout();
+                }
+            });
+        }
     }
 
     /** Function for page 1 setup */
     public void jumpToMainLayout() {
-        //TODO: Change layout to activity_main
-        // HINT: setContentView()
         setContentView(R.layout.activity_main);
-
         //TODO: Find and bind all elements(4 buttons 2 EditTexts)
         // inputNumTxt1, inputNumTxt2
         // btnAdd, btnSub, btnMult, btnDiv
@@ -79,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // defines the button that has been clicked and performs the corresponding operation
         // write operation into oper, we will use it later for output
-        //TODO: caculate result
+        //TODO: calculate result
         switch (v.getId()) {
             case R.id.btnAdd:
                 oper = "+";
@@ -103,10 +133,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // HINT:Using log.d to check your answer is correct before implement page turning
         Log.d("debug","ANS "+result);
         //TODO: Pass the result String to jumpToResultLayout() and show the result at Result view
-        jumpToResultLayout(new String(num1 + " " + oper + " " + num2 + " = " + result));
+        jumpToResultLayout(num1 + " " + oper + " " + num2 + " = " + result);
     }
 
-    public void jumpToResultLayout(String resultStr){
+    public void jumpToResultLayout(final String resultStr){
         setContentView(R.layout.result_page);
 
         //TODO: Bind return_button and textResult form result view
@@ -114,7 +144,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // HINT: Remember to give type
         return_button = (Button) findViewById(R.id.return_button);
         textResult = (TextView) findViewById(R.id.textResult);
-
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                byte[] toSend;
+                toSend = Arrays.copyOf(resultStr.getBytes(), resultStr.getBytes().length);
+                try {
+                    Log.d("Ip/Port", serverIP + " " + serverPort);
+                    socket = new Socket(serverIP, serverPort);
+                    socket.getOutputStream().write(toSend);
+                    socket.close();
+                } catch (IOException e) {
+                    Log.d("EXCEPTION", e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        }).start();
         if (textResult != null) {
             //TODO: Set the result text
             textResult.setText(resultStr);

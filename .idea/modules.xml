@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/AndroidPratice.iml" filepath="$PROJECT_DIR$/AndroidPratice.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SoftwareStudioAssigmnent8.iml" filepath="$PROJECT_DIR$/SoftwareStudioAssigmnent8.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lib/lib.iml" filepath="$PROJECT_DIR$/lib/lib.iml" />
     </modules>
   </component>
 </project>
