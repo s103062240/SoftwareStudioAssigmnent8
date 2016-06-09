@@ -54,7 +54,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void jumpToInitLayout() {
         setContentView(R.layout.activity_init);
         addressText = (EditText) findViewById(R.id.editText);
+        if (addressText != null) {
+            addressText.setHint("Server IP Address");
+        }
         portText = (EditText) findViewById(R.id.editText2);
+        if (portText != null) {
+            portText.setHint("Server Port Number");
+        }
         btnConnect = (Button) findViewById(R.id.button);
         if (btnConnect != null) {
             btnConnect.setOnClickListener(new View.OnClickListener() {
