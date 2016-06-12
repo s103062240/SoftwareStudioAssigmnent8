@@ -1,2 +1,3 @@
 # SoftwareStudioAssigmnent8
-Software Studio Assignment 8
+
+利用上次android lab的code加上socket建立連線後將訊息傳送給server做顯示即可。
